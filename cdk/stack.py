@@ -185,8 +185,8 @@ class StacIngestionApi(Stack):
         # create secret to store environment variables
         return secretsmanager.Secret(
             self,
-            f"stac-ingestor-env-secret-{stage}",
-            secret_name=f"stac-ingestor-env-secret-{stage}",
+            f"{Stack.of(self).stack_name}",
+            secret_name=f"{Stack.of(self).stack_name}-env",
             description="Contains env vars used for deployment of veda-stac-ingestor",
             generate_secret_string=secretsmanager.SecretStringGenerator(
                 secret_string_template=json.dumps(env_config),
