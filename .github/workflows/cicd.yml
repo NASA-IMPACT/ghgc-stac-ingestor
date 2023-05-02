@@ -41,6 +41,8 @@ jobs:
             echo "env_name=development" >> $GITHUB_OUTPUT
           elif [ "${{ github.ref }}" = "refs/heads/production" ]; then
             echo "env_name=production" >> $GITHUB_OUTPUT
+          else
+            exit 0
           fi
       - name: Print the environment
         run: echo "The environment is ${{ steps.define_environment.outputs.env_name }}"
@@ -52,6 +54,7 @@ jobs:
     name: Deploy to ${{ needs.define-environment.outputs.env_name }} 🚀
     runs-on: ubuntu-latest
     needs: [gitflow-enforcer, define-environment]
+    if: ${{ needs.define-environment.outputs.env_name }} != ''
     environment: ${{ needs.define-environment.outputs.env_name }}
     concurrency: ${{ needs.define-environment.outputs.env_name }}
 
