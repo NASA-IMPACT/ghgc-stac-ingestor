@@ -212,7 +212,6 @@ async def get_token(
         form_data.password,
         settings.userpool_id,
         settings.client_id,
-        settings.client_secret,
     )
 
 
