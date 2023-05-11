@@ -25,7 +25,7 @@ tags = {
     "GitTag": git_tag,
 }
 
-stack.StacIngestionApi(
+ingestor_api = stack.StacIngestionApi(
     app,
     construct_id=deployment.stack_name,
     config=deployment,
@@ -37,6 +37,14 @@ stack.StacIngestionApi(
     },
     env=deployment.env,
 )
+
+if deployment.cf_distribution_arn:
+    stack.CloudfrontUpdate(
+        app,
+        construct_id=deployment.stack_name,
+        api_url=ingestor_api.ingestor_api.url,
+        config=deployment,
+    )
 
 for key, value in tags.items():
     cdk.Tags.of(app).add(key, value)

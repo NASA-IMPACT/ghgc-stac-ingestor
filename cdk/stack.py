@@ -400,3 +400,71 @@ class StacIngestionApi(Stack):
             parameter_name=f"/{parameter_namespace}/{name}",
             string_value=value,
         )
+
+
+class CloudfrontUpdate(Stack):
+    """CDK Construct for cloudformation update"""
+
+    def __init__(
+        self,
+        scope: Construct,
+        construct_id: str,
+        api_url: str,
+        config: Deployment,
+        **kwargs,
+    ) -> None:
+        """."""
+        super().__init__(scope, construct_id, **kwargs)
+
+        stack_name = Stack.of(self).stack_name
+
+        # STAC API
+        CloudfrontUpdate(
+            self,
+            "ingestor-api-cf-update",
+            distribution_arn=config.cf_distribution_arn,
+            origin_config={
+                "Id": f"{stack_name}-api",
+                "DomainName": api_url,
+                "OriginPath": f"/{config.stage}",
+                "CustomHeaders": {"Quantity": 0},
+                "CustomOriginConfig": {
+                    "HTTPPort": 80,
+                    "HTTPSPort": 443,
+                    "OriginProtocolPolicy": "http-only",
+                    "OriginSslProtocols": {"Quantity": 1, "Items": ["TLSv1.2"]},
+                    "OriginReadTimeout": 60,
+                    "OriginKeepaliveTimeout": 5,
+                },
+                "ConnectionAttempts": 3,
+                "ConnectionTimeout": 10,
+                "OriginShield": {"Enabled": False},
+            },
+            behavior_config={
+                "PathPattern": f"{config.path_prefix}*",
+                "TargetOriginId": f"{stack_name}-api",
+                "TrustedSigners": {"Enabled": False, "Quantity": 0},
+                "TrustedKeyGroups": {"Enabled": False, "Quantity": 0},
+                "ViewerProtocolPolicy": "redirect-to-https",
+                "AllowedMethods": {
+                    "Quantity": 7,
+                    "Items": [
+                        "HEAD",
+                        "DELETE",
+                        "POST",
+                        "GET",
+                        "OPTIONS",
+                        "PUT",
+                        "PATCH",
+                    ],
+                    "CachedMethods": {"Quantity": 2, "Items": ["HEAD", "GET"]},
+                },
+                "SmoothStreaming": False,
+                "Compress": True,
+                "LambdaFunctionAssociations": {"Quantity": 0},
+                "FunctionAssociations": {"Quantity": 0},
+                "FieldLevelEncryptionId": "",
+                "CachePolicyId": "4135ea2d-6df8-44a3-9df3-4b5a84be39ad",  # Managed CachingDisabled Policy
+                "OriginRequestPolicyId": "216adef6-5c7f-47e4-b989-5492eafa07d3",  # Managed AllViewer Origin Request Policy
+            },
+        )

@@ -79,6 +79,15 @@ class Deployment(BaseSettings):
         description="ID of AWS ECR repository used for OIDC provider",
     )
 
+    path_prefix: Optional[str] = Field(
+        "",
+        description="Optional path prefix to add to all api endpoints",
+    )
+
+    cf_distribution_arn: Optional[str] = Field(
+        None, description="Cloudfront distribution ARN"
+    )
+
     class Config:
         env_prefix = ""
         case_sentive = False

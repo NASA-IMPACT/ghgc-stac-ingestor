@@ -14,3 +14,4 @@ python-multipart
 pytest-mock
 pre-commit
 uvicorn
+cdk-cloudfront-update @ git+https://github.com/developmentseed/cdk-cloudfront-update.git#egg=cdk-cloudfront-update
