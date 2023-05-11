@@ -10,6 +10,9 @@ AwsOidcArn = constr(regex=r"^arn:aws:iam::\d{12}:oidc-provider/.+")
 
 
 class Deployment(BaseSettings):
+    app_name: str = Field(
+        description="Name of the application", default="ghgc-stac-ingestor"
+    )
     stage: str = Field(
         description=" ".join(
             [
@@ -43,7 +46,6 @@ class Deployment(BaseSettings):
 
     userpool_id: str = Field(description="The Cognito Userpool used for authentication")
     client_id: str = Field(description="The Cognito APP client ID")
-    client_secret: str = Field(description="The Cognito APP client secret")
 
     stac_db_secret_name: str = Field(
         description="Name of secret containing pgSTAC DB connection information"
@@ -95,7 +97,7 @@ class Deployment(BaseSettings):
 
     @property
     def stack_name(self) -> str:
-        return f"ghgc-stac-ingestion-{self.stage}"
+        return f"{self.app_name}-{self.stage}"
 
     @property
     def env(self) -> aws_cdk.Environment:
