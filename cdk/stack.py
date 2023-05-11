@@ -47,7 +47,7 @@ class StacIngestionApi(Stack):
         lambda_env_keys = [
             "DYNAMODB_TABLE",
             "JWKS_URL",
-            "ROOT_PATH",
+            # "ROOT_PATH",
             "NO_PYDANTIC_SSM_SETTINGS",
             "STAC_URL",
             "DATA_ACCESS_ROLE",
@@ -55,12 +55,13 @@ class StacIngestionApi(Stack):
             "CLIENT_ID",
             "MWAA_ENV",
             "RASTER_URL",
+            "PATH_PREFIX",
         ]
 
         env = {
             "DYNAMODB_TABLE": table.table_name,
             "JWKS_URL": jwks_url,
-            "ROOT_PATH": f"/{config.stage}",
+            # "ROOT_PATH": f"/{config.stage}",
             "NO_PYDANTIC_SSM_SETTINGS": "1",
             "STAC_URL": config.stac_url,
             "DATA_ACCESS_ROLE": config.data_access_role or "",
@@ -68,12 +69,11 @@ class StacIngestionApi(Stack):
             "CLIENT_ID": config.client_id,
             "MWAA_ENV": config.mwaa_env,
             "RASTER_URL": config.raster_url,
-            "OIDC_PROVIDER_ARN": config.oidc_provider_arn,
-            "OIDC_PROVIDER_REPO_ID": config.oidc_repo_id,
             "STAC_DB_SECRET_NAME": config.stac_db_secret_name,
             "STAC_DB_VPC_ID": config.stac_db_vpc_id,
             "STAC_DB_SECURITY_GROUP_ID": config.stac_db_security_group_id,
             "STAC_DB_PUBLIC_SUBNET": config.stac_db_public_subnet,
+            "PATH_PREFIX": config.path_prefix,
         }
 
         db_secret = self.get_db_secret(config.stac_db_secret_name, config.stage)
@@ -91,7 +91,6 @@ class StacIngestionApi(Stack):
             env=lambda_env,
             data_access_role=data_access_role,
             user_pool=user_pool,
-            stage=config.stage,
             db_secret=db_secret,
             db_vpc=db_vpc,
             db_security_group=db_security_group,
@@ -159,7 +158,6 @@ class StacIngestionApi(Stack):
         env: Dict[str, str],
         data_access_role: Union[iam.IRole, None],
         user_pool: cognito.IUserPool,
-        stage: str,
         db_secret: secretsmanager.ISecret,
         db_vpc: ec2.IVpc,
         db_security_group: ec2.ISecurityGroup,

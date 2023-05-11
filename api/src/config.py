@@ -29,6 +29,11 @@ class Settings(BaseSettings):
 
     client_id: str = Field(description="The Cognito APP client ID")
 
+    path_prefix: Optional[str] = Field(
+        "",
+        description="Optional path prefix to add to all api endpoints",
+    )
+
     class Config(AwsSsmSourceConfig):
         env_file = ".env"
 
