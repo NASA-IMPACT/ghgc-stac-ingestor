@@ -47,16 +47,16 @@ jobs:
           end=$(date +%s)
           output=$(aws accessanalyzer start-policy-generation \
           --policy-generation-details '{
-            "principalArn": "arn:aws:iam::<account-id>:role/<role-name>"
+            "principalArn": "arn:aws:iam::193333210305:role/Git_Role_Test"
           }' \
           --cloud-trail-details '{
-            "accessRole": "arn:aws:iam::<account-id>:role/<role-name>",
+            "accessRole": "arn:aws:iam::193333210305:role/Git_Role_Test",
             "endTime": '$end',
             "startTime": '${{ env.start }}',
             "trails": [
               {
                 "allRegions": true,
-                "cloudTrailArn": "arn:aws:cloudtrail:us-east-1:<account-id>:trail/<Trail-name>",
+                "cloudTrailArn": "arn:aws:cloudtrail:us-east-1:193333210305:trail/CDK-OIDC-GitHub-Trail",
                 "regions": []
               }
             ]
