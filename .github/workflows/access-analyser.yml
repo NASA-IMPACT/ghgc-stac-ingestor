@@ -38,8 +38,6 @@ jobs:
         uses: "./.github/actions/cdk-deploy"
         with:
             env_aws_secret_name: ghgc-stac-ingestor-dev
-      - name: Destroy CDK app
-        run: cdk destroy --force
       - name: Wait before starting policy generation
         run: sleep 130
       - name: Start policy generation
