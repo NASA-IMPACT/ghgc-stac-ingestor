@@ -40,15 +40,11 @@ runs:
       run: |
         pip install -r requirements.txt
 
-    - name: Get relevant environment configuration from aws secrets
-      shell: bash
-      working-directory: ${{ inputs.dir }}
-      run: ./scripts/sync-env.sh ${{ inputs.env_aws_secret_name }}
 
     - name: Deploy
       shell: bash
       working-directory: ${{ inputs.dir }}
       run: |
-        python ${{ inputs.script_path }} foo bar
+        python ${{ inputs.script_path }} --secret-id ${{ inputs.env_aws_secret_name }} --stack-name bar
         cdk deploy --all --require-approval never --outputs-file cdk-outputs.json
 
