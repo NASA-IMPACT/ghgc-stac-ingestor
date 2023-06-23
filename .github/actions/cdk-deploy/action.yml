@@ -46,5 +46,5 @@ runs:
       working-directory: ${{ inputs.dir }}
       run: |
         python ${{ inputs.script_path }} --secret-id ${{ inputs.env_aws_secret_name }} --stack-name bar
-        cdk deploy --all --require-approval never --outputs-file cdk-outputs.json
+        # cdk deploy --all --require-approval never --outputs-file cdk-outputs.json
 
