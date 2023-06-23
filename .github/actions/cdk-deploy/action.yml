@@ -51,3 +51,4 @@ runs:
       run: |
         python ${{ inputs.script_path }} foo bar
         cdk deploy --all --require-approval never --outputs-file cdk-outputs.json
+
