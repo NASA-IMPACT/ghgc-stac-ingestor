@@ -8,9 +8,10 @@ httpx
 isort
 moto[s3,dynamodb]
 pytest
-pydantic
+pydantic==1.9.1
 python-dotenv
 python-multipart
 pytest-mock
 pre-commit
 uvicorn
+pydantic[dotenv]
