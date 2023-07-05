@@ -39,7 +39,7 @@ stac_ingestor = stack.StacIngestionApi(
 )
 
 cdk.CfnOutput(
-    stack,
+    stac_ingestor,
     "ingestor_api_url",
     export_name=f"{deployment.stack_name}-ingestor-api-url",
     value=stac_ingestor.ingestor_api.url,
