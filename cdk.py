@@ -25,7 +25,7 @@ tags = {
     "GitTag": git_tag,
 }
 
-stack.StacIngestionApi(
+stac_ingestor = stack.StacIngestionApi(
     app,
     construct_id=deployment.stack_name,
     config=deployment,
@@ -36,6 +36,13 @@ stack.StacIngestionApi(
         "Stack": deployment.stage,
     },
     env=deployment.env,
+)
+
+cdk.CfnOutput(
+    stack,
+    "ingestor_api_url",
+    export_name=f"{deployment.stack_name}-ingestor-api-url",
+    value=stac_ingestor.ingestor_api.url,
 )
 
 for key, value in tags.items():
