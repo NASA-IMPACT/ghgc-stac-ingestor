@@ -13,6 +13,9 @@ class Deployment(BaseSettings):
     app_name: str = Field(
         description="Name of the application", default="stac-ingestor"
     )
+    proj_prefix: str = Field(
+        description="Name of the project", default="ghgc"
+    )
     stage: str = Field(
         description=" ".join(
             [
