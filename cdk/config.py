@@ -11,7 +11,7 @@ AwsOidcArn = constr(regex=r"^arn:aws:iam::\d{12}:oidc-provider/.+")
 
 class Deployment(BaseSettings):
     app_name: str = Field(
-        description="Name of the application", default="stac-ingestor"
+        description="Name of the application", default="ingestor"
     )
     proj_prefix: str = Field(
         description="Name of the project", default="ghgc"
@@ -100,7 +100,7 @@ class Deployment(BaseSettings):
 
     @property
     def stack_name(self) -> str:
-        return f"{self.app_name}-{self.stage}"
+        return f"{self.proj_prefix}-{self.app_name}-{self.stage}"
 
     @property
     def env(self) -> aws_cdk.Environment:
