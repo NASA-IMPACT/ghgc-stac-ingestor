@@ -16,7 +16,7 @@ except subprocess.CalledProcessError:
     git_tag = "no-tag"
 
 tags = {
-    "Project": deployment.proj_prefix,
+    "Project": deployment.project_prefix,
     "Owner": deployment.owner,
     "Client": "nasa-impact",
     "Stack": deployment.stage,
@@ -29,7 +29,7 @@ stac_ingestor = stack.StacIngestionApi(
     construct_id=deployment.stack_name,
     config=deployment,
     tags={
-        "Project": deployment.proj_prefix,
+        "Project": deployment.project_prefix,
         "Owner": deployment.owner,
         "Client": "nasa-impact",
         "Stack": deployment.stage,

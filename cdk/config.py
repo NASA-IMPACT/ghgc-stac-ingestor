@@ -13,7 +13,7 @@ class Deployment(BaseSettings):
     app_name: str = Field(
         description="Name of the application", default="ingestor"
     )
-    proj_prefix: str = Field(
+    project_prefix: str = Field(
         description="Name of the project", default="ghgc"
     )
     stage: str = Field(
@@ -100,7 +100,7 @@ class Deployment(BaseSettings):
 
     @property
     def stack_name(self) -> str:
-        return f"{self.proj_prefix}-{self.app_name}-{self.stage}"
+        return f"{self.project_prefix}-{self.app_name}-{self.stage}"
 
     @property
     def env(self) -> aws_cdk.Environment:
