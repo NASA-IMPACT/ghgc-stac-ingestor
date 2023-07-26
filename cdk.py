@@ -24,6 +24,7 @@ tags = {
     "GitTag": git_tag,
 }
 
+
 stac_ingestor = stack.StacIngestionApi(
     app,
     construct_id=deployment.stack_name,
@@ -35,6 +36,9 @@ stac_ingestor = stack.StacIngestionApi(
         "Stack": deployment.stage,
     },
     env=deployment.env,
+    synthesizer=cdk.DefaultStackSynthesizer(
+        qualifier=deployment.cdk_qualifier
+),
 )
 
 cdk.CfnOutput(

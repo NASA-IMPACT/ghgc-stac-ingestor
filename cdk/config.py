@@ -92,6 +92,10 @@ class Deployment(BaseSettings):
         None,
         description="Name of IAM policy to define stack permissions boundary",
     )
+    cdk_qualifier: Optional[str] = Field(
+        "hnb659fds",
+        description="CDK qualifier for deployment.",
+    )
 
     class Config:
         env_prefix = ""
