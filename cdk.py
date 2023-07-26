@@ -7,7 +7,6 @@ from aws_cdk import App
 from cdk import config, stack
 
 deployment = config.Deployment(_env_file=".env")
-
 app = App()
 
 git_sha = subprocess.check_output(["git", "rev-parse", "HEAD"]).decode().strip()
@@ -17,7 +16,7 @@ except subprocess.CalledProcessError:
     git_tag = "no-tag"
 
 tags = {
-    "Project": "ghgc",
+    "Project": deployment.project_prefix,
     "Owner": deployment.owner,
     "Client": "nasa-impact",
     "Stack": deployment.stage,
@@ -25,17 +24,28 @@ tags = {
     "GitTag": git_tag,
 }
 
-stack.StacIngestionApi(
+
+stac_ingestor = stack.StacIngestionApi(
     app,
     construct_id=deployment.stack_name,
     config=deployment,
     tags={
-        "Project": "ghgc",
+        "Project": deployment.project_prefix,
         "Owner": deployment.owner,
         "Client": "nasa-impact",
         "Stack": deployment.stage,
     },
     env=deployment.env,
+    synthesizer=cdk.DefaultStackSynthesizer(
+        qualifier=deployment.cdk_qualifier
+),
+)
+
+cdk.CfnOutput(
+    stac_ingestor,
+    "ingestor_api_url",
+    export_name=f"{deployment.stack_name}-ingest-url",
+    value=stac_ingestor.ingestor_api.url,
 )
 
 for key, value in tags.items():

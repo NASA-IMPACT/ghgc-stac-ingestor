@@ -11,7 +11,10 @@ AwsOidcArn = constr(regex=r"^arn:aws:iam::\d{12}:oidc-provider/.+")
 
 class Deployment(BaseSettings):
     app_name: str = Field(
-        description="Name of the application", default="ghgc-stac-ingestor"
+        description="Name of the application", default="ingestor"
+    )
+    project_prefix: str = Field(
+        description="Name of the project", default="ghgc"
     )
     stage: str = Field(
         description=" ".join(
@@ -34,14 +37,12 @@ class Deployment(BaseSettings):
         default_factory=getuser,
     )
 
-    aws_account: str = Field(
-        description="AWS account used for deployment",
-        env="CDK_DEFAULT_ACCOUNT",
+    aws_account_id: str = Field(
+        description="AWS account used for deployment"
     )
     aws_region: str = Field(
         default="us-west-2",
-        description="AWS region used for deployment",
-        env="CDK_DEFAULT_REGION",
+        description="AWS region used for deployment"
     )
 
     userpool_id: str = Field(description="The Cognito Userpool used for authentication")
@@ -50,7 +51,7 @@ class Deployment(BaseSettings):
     stac_db_secret_name: str = Field(
         description="Name of secret containing pgSTAC DB connection information"
     )
-    stac_db_vpc_id: str = Field(description="ID of VPC running pgSTAC DB")
+    vpc_id: str = Field(description="ID of VPC running pgSTAC DB")
     stac_db_security_group_id: str = Field(
         description="ID of Security Group used by pgSTAC DB"
     )
@@ -70,6 +71,7 @@ class Deployment(BaseSettings):
 
     mwaa_env: Optional[str] = Field(
         description="Environment of Airflow deployment",
+        default="mwaa_env"
     )
 
     oidc_provider_arn: Optional[AwsOidcArn] = Field(
@@ -90,6 +92,10 @@ class Deployment(BaseSettings):
         None,
         description="Name of IAM policy to define stack permissions boundary",
     )
+    cdk_qualifier: Optional[str] = Field(
+        "hnb659fds",
+        description="CDK qualifier for deployment.",
+    )
 
     class Config:
         env_prefix = ""
@@ -98,11 +104,11 @@ class Deployment(BaseSettings):
 
     @property
     def stack_name(self) -> str:
-        return f"{self.app_name}-{self.stage}"
+        return f"{self.project_prefix}-{self.app_name}-{self.stage}"
 
     @property
     def env(self) -> aws_cdk.Environment:
         return aws_cdk.Environment(
-            account=self.aws_account,
+            account=self.aws_account_id,
             region=self.aws_region,
         )
