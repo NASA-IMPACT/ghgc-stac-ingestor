@@ -18,7 +18,6 @@ sample_data = {
     "sample_files": ["s3://veda-data-store-staging/foo/bar.tif"],
     "discovery_items": [
         {
-            "discovery": "s3",
             "cogify": False,
             "upload": False,
             "dry_run": True,
@@ -48,7 +47,6 @@ sample_data_datetime = {
     "sample_files": ["s3://veda-data-store-staging/foo/bar.tif"],
     "discovery_items": [
         {
-            "discovery": "s3",
             "cogify": False,
             "upload": False,
             "dry_run": True,
