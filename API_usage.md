@@ -93,14 +93,21 @@ One you've logically grouped the datasets into collectionss, create dataset defi
   ],
   "discovery_items": [
     {
-      "discovery": "s3",
       "cogify": false,
       "upload": false,
       "dry_run": false,
       "prefix": "EIS/COG/LIS_GLOBAL_DA/Evap/",
       "bucket": "veda-data-store-staging",
       "filename_regex": "(.*)LIS_Evap_(.*).tif$",
-      "datetime_range": "day"
+      "id_regex": "li_global_da(?:x*)", 
+      "datetime_range": "day",
+      "assets": {
+          "lis-evaporaevapotranspiration": {
+              "title": "Evapotranspiration - LIS 10km Global DA",
+              "description": "Gridded total evapotranspiration (in kg m-2 s-1) from 10km global LIS with assimilation",
+              "regex": ".*"
+          }
+      }
     }
   ]
 }
@@ -126,7 +133,6 @@ The following table describes what each of these fields mean:
 |  `temporal_extent["start_date"]` | the `start_date` of the dataset  | iso datetime that ends in `Z`  | `2002-08-02T00:00:00Z` |
 |  `temporal_extent["end_date"]` | the `end_date` of the dataset  | iso datetime that ends in `Z`  | `2021-12-01T00:00:00Z` |
 |  `sample_files` | a list of s3 urls for the sample files that go into the collection  |   | `[ "s3://veda-data-store-staging/no2-diff/no2-diff_201506.tif", "s3://veda-data-store-staging/no2-diff/no2-diff_201507.tif"]` |
-|  `discovery_items["discovery"]` |  where to discover the data from; currently supported are s3 buckets and cmr | `s3` \| `cmr` | `s3` |
 |  `discovery_items["cogify"]` |  does the file need to be converted to a cloud optimized geptiff (COG)? `false` if it is already a COG | `true` \| `false`  | `false` |
 |  `discovery_items["upload"]` | does it need to be uploaded to the veda s3 bucket? `false` if it already exists in `veda-data-store-staging` |  `true` \| `false` | `false` |
 |  `discovery_items["dry_run"]` | if set to `true`, the items will go through the pipeline, but won't actually publish to the stac catalog; useful for testing purposes | `true` \| `false`  | `false` |
@@ -134,6 +140,22 @@ The following table describes what each of these fields mean:
 |  `discovery_items["prefix"]`| within the s3 bucket, the prefix or path to the "folder" where the data files exist | any valid path winthin the bucket  | `EIS/COG/LIS_GLOBAL_DA/Evap/` |
 |  `discovery_items["filename_regex"]` |  a common filename pattern that all the files in the collection follow | a valid regex expression  | `(.*)LIS_Evap_(.*).cog.tif$` |
 |  `discovery_items["datetime_range"]` | based on the naming convention in [STEP I](#STEP I: Prepare the data), the datetime range to be extracted from the filename |  `year` \| `month` \| `day` | `year` |
+|  `discovery_items["id_regex"]` | a regex that much include a group, this regex should match the relevant files and the group is how the files are grouped into a single item; example: if there are multiple files `ch4-emissions-agriculture_2015`, `ch4-emissions-human_2015`, providing `id_regex` `.*_(.*)$` will group these two files into the same item as different assets.
+|  `discovery_items["assets"]` | a dictionary of assets, where the `regex` determines the pattern of grouping into assets; example: if we have two files: `ch4-emissions-agriculture_2015`, `ch4-emissions-human_2015` and we want to add the first to the `agriculture-emission` asset and second to `human-emissions` asset, the `assets` would look like the following:
+```json
+{
+  "agriculture-emissions": {
+    "title": "CH4 emissions from agriculture",
+    "description": "CH4 emissions from agriculture",
+    "regex": ".*-agriculture_",
+  },
+  "agriculture-emissions": {
+    "title": "CH4 emissions from agriculture",
+    "description": "CH4 emissions from agriculture",
+    "regex": ".*-human_",
+  }
+}
+```
 
 > Note: The steps after this are technical, so at this point the scientists can send the json to the VEDA POC and they'll handle the publication process. The plan is to make this directly available to the scientists in the future.
 
