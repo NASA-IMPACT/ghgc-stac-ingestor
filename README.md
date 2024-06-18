@@ -1,5 +1,9 @@
 # GHGC STAC Ingestor
 
+> [!IMPORTANT]
+> The US GHG Center has started using [veda-backend](https://github.com/NASA-IMPACT/veda-backend/) repository directly for its backend services, which includes the STAC ingestion services. Hence, this forked version of the veda-stac-ingestor repository is no longer maintained and so the repository is now archived.
+
+
 This service provides an entry-point for users/services to add new records to our STAC database. Its primary functions are to 1) validate the STAC Items before insertion, 2) batch the insertions to reduce load on our STAC database.
 
 STAC items are validated to ensure that:
